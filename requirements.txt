@@ -1,0 +1,4 @@
+elasticsearch==7.10.0
+click==7.1.2
+rich==9.13.0
+requests==2.23.0
