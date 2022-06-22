@@ -1,3 +1,4 @@
+import json
 import click
 
 from horuz.cli import pass_environment
@@ -34,9 +35,10 @@ def projects_rm(ctx, verbose, project):
 
 
 @cli.command("ls")
+@click.option('-oJ', is_flag=True, help="JSON Output")
 @click.option("-v", "--verbose", is_flag=True, help="Enables verbose mode.")
 @pass_environment
-def projects_ls(ctx, verbose):
+def projects_ls(ctx, oj, verbose):
     """
     List all your ElasticSearch Projects
     """
@@ -44,10 +46,14 @@ def projects_ls(ctx, verbose):
     hes = HoruzES("", ctx)
     indexes = hes.indexes()
     if indexes:
-        rtable.add_column("Projects", style="cyan", no_wrap=True)
-        for i in indexes:
-            rtable.add_row(i)
-        ctx.log(rtable)
+        if oj:
+            indexes_json = json.dumps(indexes)
+            ctx.log(indexes_json)
+        else:
+            rtable.add_column("Projects", style="cyan", no_wrap=True)
+            for i in indexes:
+                rtable.add_row(i)
+            ctx.log(rtable)
 
 
 @cli.command("describe")
